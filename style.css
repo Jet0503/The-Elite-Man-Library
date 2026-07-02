@@ -1,0 +1,13 @@
+.featured {
+    display: flex;
+    flex-direction: column; /* Stack vertically */
+    gap: 20px; /* Space between items */
+}
+
+.hero {
+    background-image: url("Bookshelf.jpg");
+    background-size: cover;      /* Fills the section */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat;
+    min-height: 500px;
+}

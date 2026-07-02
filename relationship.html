@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a3a1a 0%, #2d5016 50%, #1e3a0f 100%);
+            min-height: 100vh;
+            padding: 60px 20px;
+            color: #ffffff;
+        }
+
+        .library-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .book-card {
+            background: rgba(144, 238, 144, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(144, 238, 144, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 50, 0, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 50, 0, 0.6);
+            border: 1px solid rgba(144, 238, 144, 0.3);
+        }
+
+        .book-cover-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #4a7c3a 0%, #2d5016 100%);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .book-card:hover .book-cover {
+            transform: scale(1.05);
+        }
+
+        .book-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 30, 0, 0.85) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .book-card:hover .book-overlay {
+            opacity: 1;
+        }
+
+        .book-info {
+            padding: 30px;
+            background: rgba(144, 238, 144, 0.05);
+        }
+
+        .book-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ffffff 0%, #90ee90 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .book-author {
+            font-size: 1rem;
+            color: #a8d5a8;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        .read-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #4a7c3a 0%, #2d5016 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(45, 80, 22, 0.5);
+        }
+
+        .read-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45, 80, 22, 0.7);
+        }
+
+        .read-btn:active {
+            transform: translateY(0);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .library-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            body {
+                padding: 40px 15px;
+            }
+        }
+
+        .book-card {
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .book-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .book-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .library-title {
+            text-align: center;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 50px;
+            background: linear-gradient(135deg, #ffffff 0%, #818183 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="library-title">The Elite Man</h1>
+    <div class="library-container" id="library"></div>
+
+    <script>
+        const books = [
+            {
+                title: "The Art of Logical Thinking",
+                author: "Walker Atkinson",
+                cover: "The Art of Logical Thinking.jpg",
+                file: "The Art of Logical Thinking by Walker Atkinson.pdf"
+            },
+            {
+                title: "Happiness and Marriage",
+                author: "Elizabeth Towne",
+                cover: "happiness and marriage.jpg",
+                file: "happiness and marriage by elizabeth towne.pdf"
+            }
+        ];
+
+        const libraryContainer = document.getElementById('library');
+
+        books.forEach((book, index) => {
+            const bookCard = document.createElement('div');
+            bookCard.className = 'book-card';
+            bookCard.style.animationDelay = `${index * 0.1}s`;
+            
+            bookCard.innerHTML = `
+                <div class="book-cover-container">
+                    <img src="${book.cover}" alt="${book.title} Cover" class="book-cover" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22600%22%3E%3Crect fill=%22%234a7c3a%22 width=%22400%22 height=%22600%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22%3ENo Cover%3C/text%3E%3C/svg%3E'">
+                    <div class="book-overlay"></div>
+                </div>
+                <div class="book-info">
+                    <h2 class="book-title">${book.title}</h2>
+                    <p class="book-author">${book.author}</p>
+                    <a href="${book.file}" class="read-btn" target="_blank">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 10v10M8 14l4 4 4-4M5 6h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z"></path>
+                        </svg>
+                        Read Book
+                    </a>
+                </div>
+            `;
+            
+            libraryContainer.appendChild(bookCard);
+        });
+    </script>
+
+</body>
+</html>
